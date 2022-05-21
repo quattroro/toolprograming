@@ -6,6 +6,10 @@ using UnityEngine;
 public class ItemDataLoader : MonoBehaviour
 {
     public List<string> originalstr = null;
+    public string FilePath;
+
+    public List<BaseNode> itemnodes = new List<BaseNode>();
+    public Sprite[] sprites = null;
     public List<Dictionary<int, string>> ItemFileOpen(string filepath, out string classname)
     {
         originalstr.Clear();
@@ -37,6 +41,7 @@ public class ItemDataLoader : MonoBehaviour
         {
             string str = sr.ReadLine();
             originalstr.Add(str);
+
             if (str == null || str.Length == 0)
             {
                 break;
@@ -55,25 +60,33 @@ public class ItemDataLoader : MonoBehaviour
                     flag = true;//여는중괄호가 나오면 닫는중괄호가 나올때까지 앞으로 나오는 , 는 그냥 집어넣는다.  
                     continue;
                 }
-                else if (str[i] == ',')
+                else if (str[i] == ',')//,가 나오면 해당 인덱스에는 , string으로 변환해서 columsdic 에 넣어준다.
                 {
                     if (!flag)
                     {
                         temp[index] = '\0';
-                        string tt = string.Join("", temp);
-                        columsdic.Add(Dicindex++, tt.Split('\0')[0]);
+                        //string tt = string.Join("", temp);//
+                        //columsdic.Add(Dicindex++, tt.Split('\0')[0]);
+
+                        columsdic.Add(Dicindex++, new string(temp));
+                        //Debug.Log(new string(temp));
+                        //temp = null;
                         temp = new char[str.Length];
                         index = 0;
                         continue;
                     }
                 }
-                else if (i == str.Length - 1)
+                else if (i == str.Length - 1)//받아온 한 줄의 마지막 문자일때도 쉼표과 같은 동작을 해준다.
                 {
-                    if (str[i] != '}')
+                    if (str[i] != '}')//만약 마지막이 } 로 끝났을때는 }문자도 넣어준다.
                         temp[index++] = str[i];
 
-                    string tt = string.Join("", temp);
-                    columsdic.Add(Dicindex++, tt.Split('\0')[0]);
+                    //string tt = string.Join("", temp);
+                    //columsdic.Add(Dicindex++, tt.Split('\0')[0]);
+
+                    columsdic.Add(Dicindex++, new string(temp));
+                   // Debug.Log(new string(temp));
+                    //temp = null;
                     temp = new char[str.Length];
                     index = 0;
                     break;
@@ -110,15 +123,42 @@ public class ItemDataLoader : MonoBehaviour
     //불러와진 아이템 정보들을 이용해 아이템 노드를 만들어 준다.
     public void ItemInfo_Road(string classname)
     {
-        string filepath = UnityEngine.Application.persistentDataPath + $"/{classname}_Relation.csv";
-        Debug.Log(filepath);
-        List<Dictionary<int, string>> datalist = ItemFileOpen(filepath, out classname);
+        //string filepath = UnityEngine.Application.persistentDataPath + $"/{classname}_Relation.csv";
+        Debug.Log(FilePath);
+        List<Dictionary<int, string>> datalist = ItemFileOpen(FilePath, out classname);
         //nodeobj.gameObject.SetActive(true);
-
         int ItemCode;
         string ItemName;
         string SpriteName;
         int SpriteIndex;
+
+        ItemNode itemNode = Resources.Load<ItemNode>("Prefabs/ItemNode");
+        int yval = 0;
+        int xval = 0;
+
+        for (int i=0;i<datalist.Count;i++)
+        {
+            xval = i % 5;
+            if(xval==0)
+            {
+                yval++;
+            }
+            int.TryParse(datalist[i][(int)EnumTypes.ItemCollums.ItemCode], out ItemCode);
+            ItemName = datalist[i][(int)EnumTypes.ItemCollums.ItemName];
+            SpriteName = datalist[i][(int)EnumTypes.ItemCollums.ResourceName];
+            int.TryParse(datalist[i][(int)EnumTypes.ItemCollums.ResourceIndex], out SpriteIndex);
+
+            ItemNode copyobj = GameObject.Instantiate<ItemNode>(itemNode);
+
+            sprites = Resources.LoadAll<Sprite>($"Sprites/{SpriteName}");
+            Debug.Log($"{SpriteName} road");
+            Debug.Log($"arr len=> {sprites.Length}");
+            copyobj.InitSetting(ItemCode, ItemName, sprites[SpriteIndex], new Vector3(xval * 72, yval * 72), this.transform);
+
+
+
+        }
+        
 
 
 
@@ -180,10 +220,9 @@ public class ItemDataLoader : MonoBehaviour
 
 
 
-    // Start is called before the first frame update
     void Start()
     {
-        
+        ItemInfo_Road(FilePath);
     }
 
     // Update is called once per frame
