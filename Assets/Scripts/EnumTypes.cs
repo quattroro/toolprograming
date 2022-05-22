@@ -10,13 +10,30 @@ public class EnumTypes
         ItemName,
         ResourceName,
         ResourceIndex,
+        ItemType,
         CollumMax
     }
 
+    public enum SlotTypes
+    {
+        Item,
+        Craft,
+        Result,
+        TypeMax
+    }
+
+    public enum ItemTypes
+    {
+        Blocks,
+        Equips,
+        TypeMax
+    }
 
     public enum RecipeCollums
     {
         ResultItem,
+        ResultName,
+        Count,
         Slot1,
         Slot2,
         Slot3,

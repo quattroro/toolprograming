@@ -4,15 +4,9 @@ using UnityEngine;
 
 public class ItemSlot : BaseSlot
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        base.Start();
+        slottype = EnumTypes.SlotTypes.Item;
     }
 }

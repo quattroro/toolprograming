@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class ItemDataLoader : MonoBehaviour
+public class ItemDataLoader : Singleton<ItemDataLoader>
 {
     public List<string> originalstr = null;
     public string FilePath;
 
     public List<BaseNode> itemnodes = new List<BaseNode>();
     public Sprite[] sprites = null;
+
+
     public List<Dictionary<int, string>> ItemFileOpen(string filepath, out string classname)
     {
         originalstr.Clear();
@@ -65,10 +67,10 @@ public class ItemDataLoader : MonoBehaviour
                     if (!flag)
                     {
                         temp[index] = '\0';
-                        //string tt = string.Join("", temp);//
-                        //columsdic.Add(Dicindex++, tt.Split('\0')[0]);
+                        string tt = string.Join("", temp);//
+                        columsdic.Add(Dicindex++, tt.Split('\0')[0]);//그냥 new string() 생성자를 이용하면 char배열의 크기만큼 뒤에 \0으로 초기화된 문자열이 만들어져버린다.
 
-                        columsdic.Add(Dicindex++, new string(temp));
+                        //columsdic.Add(Dicindex++, new string(temp));
                         //Debug.Log(new string(temp));
                         //temp = null;
                         temp = new char[str.Length];
@@ -81,11 +83,13 @@ public class ItemDataLoader : MonoBehaviour
                     if (str[i] != '}')//만약 마지막이 } 로 끝났을때는 }문자도 넣어준다.
                         temp[index++] = str[i];
 
-                    //string tt = string.Join("", temp);
-                    //columsdic.Add(Dicindex++, tt.Split('\0')[0]);
+                    temp[index] = '\0';
+                    string tt = string.Join("", temp);
+                    columsdic.Add(Dicindex++, tt.Split('\0')[0]);//그냥 new string() 생성자를 이용하면 char배열의 크기만큼 뒤에 \0으로 초기화된 문자열이 만들어져버린다.
 
-                    columsdic.Add(Dicindex++, new string(temp));
-                   // Debug.Log(new string(temp));
+                    //temp[index] = '\0';
+                    //columsdic.Add(Dicindex++, new string(temp));
+                    // Debug.Log(new string(temp));
                     //temp = null;
                     temp = new char[str.Length];
                     index = 0;
@@ -121,6 +125,7 @@ public class ItemDataLoader : MonoBehaviour
     }
 
     //불러와진 아이템 정보들을 이용해 아이템 노드를 만들어 준다.
+    //csv 파일의 칼럼의 순서와 EnumTypes.ItemCollums 의 순서가 같아야 한다.
     public void ItemInfo_Road(string classname)
     {
         //string filepath = UnityEngine.Application.persistentDataPath + $"/{classname}_Relation.csv";
@@ -131,6 +136,8 @@ public class ItemDataLoader : MonoBehaviour
         string ItemName;
         string SpriteName;
         int SpriteIndex;
+        string type;
+
 
         ItemNode itemNode = Resources.Load<ItemNode>("Prefabs/ItemNode");
         int yval = 0;
@@ -143,20 +150,24 @@ public class ItemDataLoader : MonoBehaviour
             {
                 yval++;
             }
+
             int.TryParse(datalist[i][(int)EnumTypes.ItemCollums.ItemCode], out ItemCode);
             ItemName = datalist[i][(int)EnumTypes.ItemCollums.ItemName];
             SpriteName = datalist[i][(int)EnumTypes.ItemCollums.ResourceName];
             int.TryParse(datalist[i][(int)EnumTypes.ItemCollums.ResourceIndex], out SpriteIndex);
+            type = datalist[i][(int)EnumTypes.ItemCollums.ItemType];
+
 
             ItemNode copyobj = GameObject.Instantiate<ItemNode>(itemNode);
-
+            copyobj.transform.parent = this.transform;
             sprites = Resources.LoadAll<Sprite>($"Sprites/{SpriteName}");
-            Debug.Log($"{SpriteName} road");
-            Debug.Log($"arr len=> {sprites.Length}");
-            copyobj.InitSetting(ItemCode, ItemName, sprites[SpriteIndex], new Vector3(xval * 72, yval * 72), this.transform);
+            //Debug.Log($"{SpriteName} road");
+            //Debug.Log($"arr len=> {sprites.Length}");
+
+            copyobj.InitSetting(ItemCode, ItemName, sprites[SpriteIndex], new Vector3(80 + xval * 110, -1 * yval * 85), type);
 
 
-
+            itemnodes.Add(copyobj);
         }
         
 
