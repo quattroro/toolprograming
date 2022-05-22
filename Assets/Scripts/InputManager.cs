@@ -16,6 +16,7 @@ public class InputManager : MonoBehaviour
 
     BaseNode ClickedObj;
 
+    bool IsControl = false;
 
     private void Awake()
     {
@@ -42,7 +43,14 @@ public class InputManager : MonoBehaviour
                 {
                     if(!node.NodeIsClicked)//클릭된 노드가 아닐때
                     {
-                        ClickedObj = node.SettedSlot.GetSettingNode();
+                        if(IsControl)
+                        {
+                            ClickedObj = node.DivideNode();
+                        }
+                        else
+                        {
+                            ClickedObj = node.SettedSlot.GetSettingNode();
+                        }
                     }
                 }
                 else//비활성노드
@@ -147,6 +155,16 @@ public class InputManager : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             MouseUp(Input.mousePosition);
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            IsControl = true;
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            IsControl = false;
         }
     }
 }

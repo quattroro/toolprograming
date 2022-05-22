@@ -49,7 +49,30 @@ public class BaseNode : MonoBehaviour
         }
     }
 
+    public virtual BaseNode DivideNode()
+    {
+        BaseNode temp = null;
+        if(IsStackAble()&&GetStack()>=2)
+        {
+            int cur = GetStack() / 2;
+            
+            temp = GameObject.Instantiate<BaseNode>(this);
+            temp.transform.parent = this.transform.parent;
+            temp.NodeIsClicked = true;
+            temp.PreSlot = SettedSlot;
+            temp.ChangeStack(0);
+            temp.ChangeStack(cur);
+            this.ChangeStack(-cur);
+            //BaseNode temp = SettingNode;
+            //SettingNode = null;
+        }
+        else
+        {
+            temp = SettedSlot.GetSettingNode();
+        }
 
+        return temp;
+    }
     public virtual void ChangeStack(int val)
     {
         

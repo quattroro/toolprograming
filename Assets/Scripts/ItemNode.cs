@@ -54,6 +54,13 @@ public class ItemNode : BaseNode
 
     public override void ChangeStack(int val)
     {
+        if (val == 0)
+        {
+            _Stack = 0;
+            return;
+        }
+            
+
         _Stack += val;
 
         if (_Stack > 99)
