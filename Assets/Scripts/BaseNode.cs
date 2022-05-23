@@ -73,6 +73,11 @@ public class BaseNode : MonoBehaviour
 
         return temp;
     }
+
+    public virtual void ItemMerge(BaseNode node)
+    {
+
+    }
     public virtual void ChangeStack(int val)
     {
         

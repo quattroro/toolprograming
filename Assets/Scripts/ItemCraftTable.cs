@@ -61,6 +61,7 @@ public class ItemCraftTable : Singleton<ItemCraftTable>
                 }
             }
         }
+        CraftInsert();
     }
 
     //제작창에있는 아이템을 꺼냈을때는 결과창에 이미 아이템이 있을때는 해당 아이템 노드를 없애주고, 해당 아이템이 사라진 상태에서의 제작물을 검색하고 결과를 표시해준다. 
@@ -126,13 +127,13 @@ public class ItemCraftTable : Singleton<ItemCraftTable>
         if (count == 0)
             return;
 
-        int resultcode = CraftRecipe.SearchRecipe(recipelist, inputs);
+        BaseNode copyresultnode = CraftRecipe.SearchRecipe(recipelist, inputs);
 
-        if(resultcode!=-1)
+        if(copyresultnode != null)
         {
             //아이템 노드들 중에서 해당 노드를 찾아서 결과슬롯에 넣어준다.
-            BaseNode copyresultnode = GameObject.Instantiate<BaseNode>(ItemDataLoader.Instance.itemnodes.Find(x => x.GetItemID() == resultcode));
-            copyresultnode.NodeIsActive = true;
+            //BaseNode copyresultnode = GameObject.Instantiate<BaseNode>(ItemDataLoader.Instance.itemnodes.Find(x => x.GetItemID() == resultcode));
+            //copyresultnode.NodeIsActive = true;
             ResultSlot.SetNode(copyresultnode);
         }
 

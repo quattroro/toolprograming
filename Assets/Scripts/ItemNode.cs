@@ -82,6 +82,15 @@ public class ItemNode : BaseNode
             stacktext.text = string.Format("{0}", _Stack);
         }
     }
+
+    public override void ItemMerge(BaseNode node)
+    {
+        if(node.GetItemID() == this.GetItemID())
+        {
+            this.ChangeStack(node.GetStack());
+            GameObject.Destroy(node.gameObject);
+        }
+    }
     public override int GetStack()
     {
         return _Stack;

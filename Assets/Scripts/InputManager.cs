@@ -113,6 +113,12 @@ public class InputManager : MonoBehaviour
                         }
                         else
                         {
+                            //클릭된 곳에 아이템이 들어있는 슬롯이 있고 해당 아이템이 드래그하고 있는 아이템과 같은 아이템이면 아이템을 병합한다.
+                            if(slot.SettingNode.GetItemID()==ClickedObj.GetItemID()&&ClickedObj.IsStackAble())
+                            {
+                                slot.SettingNode.ItemMerge(ClickedObj);
+                                ClickedObj = null;
+                            }
                             slot = null;
                             //ClickedObj = null;
                         }

@@ -111,8 +111,9 @@ public class CraftRecipe
     }
 
     //입력받은 레시피를 똑같이 패턴으로 바꾼다음에 1차적으로 패턴의 크기를 비교하고 2차적으로 내용을 비교하여 해당 레시피를 탐색한다. 1번째 탐색을 할때는 이진탐색을 이용한다.
-    static public int SearchRecipe(List<CraftRecipe> recipelist, int[] input)
+    static public BaseNode SearchRecipe(List<CraftRecipe> recipelist, int[] input)
     {
+        BaseNode node = null;
         int[] inputpattern = GetPattern(input);
 
         //같은 크기의 레시피들을 뽑아서 비교한다.
@@ -123,12 +124,18 @@ public class CraftRecipe
             if (temparr[i].IsEqual(inputpattern))
             {
                 Debug.Log($"찾음 {temparr[i].result}");
-                return temparr[i].result;
+
+                node = GameObject.Instantiate<BaseNode>(ItemDataLoader.Instance.itemnodes.Find(x => x.GetItemID() == temparr[i].result));
+                node.ChangeStack(0);
+                node.ChangeStack(temparr[i].stock);
+                node.NodeIsActive = true;
+                return node;
+                //return temparr[i].result;
             }
         }
 
         Debug.Log($"못찾음");
-        return -1;
+        return node;
     }
 
 
