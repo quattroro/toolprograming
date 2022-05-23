@@ -887,7 +887,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originalstr: []
-  FilePath: Assets/Resources/CSV/CraftTable.csv
+  FilePath: /CSV/CraftTable.csv
   itemnodes: []
   sprites: []
   recipelist: []
@@ -980,7 +980,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originalstr: []
-  FilePath: Assets/Resources/CSV/ItemTable.csv
+  FilePath: /CSV/ItemTable.csv
   itemnodes: []
   sprites: []
 --- !u!1 &1185941478

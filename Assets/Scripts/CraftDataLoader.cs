@@ -258,7 +258,8 @@ public class CraftDataLoader : MonoBehaviour
     public void CraftInfo_Road(string classname)
     {
         Debug.Log(FilePath);
-        List<Dictionary<int, string>> datalist = CraftFileOpen(FilePath, out classname);
+        string temppath = Application.streamingAssetsPath + FilePath;//런타임중 읽기만 가능
+        List<Dictionary<int, string>> datalist = CraftFileOpen(temppath, out classname);
         int[] recipe = new int[9];
         int result;
         int stock;

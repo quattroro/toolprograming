@@ -130,7 +130,9 @@ public class ItemDataLoader : Singleton<ItemDataLoader>
     {
         //string filepath = UnityEngine.Application.persistentDataPath + $"/{classname}_Relation.csv";
         Debug.Log(FilePath);
-        List<Dictionary<int, string>> datalist = ItemFileOpen(FilePath, out classname);
+        string temppath = Application.streamingAssetsPath + FilePath;//런타임중 읽기만 가능
+        Debug.Log("파일위치??" + temppath);
+        List<Dictionary<int, string>> datalist = ItemFileOpen(temppath, out classname);
         //nodeobj.gameObject.SetActive(true);
         int ItemCode;
         string ItemName;
